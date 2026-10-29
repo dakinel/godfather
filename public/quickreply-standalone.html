@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickReply – Autonomous Email Agent</title>
+  <meta name="description" content="Autonomous AI Email Response Agent powered by custom personality and behavior rules.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%234285F4' d='M44 24c0-1.6-.1-3.1-.4-4.6H24v9.2h11.3c-.5 2.7-2 5-4.2 6.6v5.5h6.8C42 36.8 44 30.8 44 24z'/%3E%3Cpath fill='%2334A853' d='M24 44c5.4 0 9.9-1.8 13.2-4.9l-6.8-5.5c-1.8 1.2-4.1 2-6.4 2-4.9 0-9.1-3.3-10.6-7.8H6.3v5.6C9.6 40 16.3 44 24 44z'/%3E%3Cpath fill='%23FBBC05' d='M13.4 27.8c-.4-1.2-.6-2.5-.6-3.8s.2-2.6.6-3.8V14.6H6.3C5 17.2 4.2 20.5 4.2 24s.8 6.8 2.1 9.4l7.1-5.6z'/%3E%3Cpath fill='%23EA4335' d='M24 11.6c3 0 5.6 1 7.7 3l5.8-5.8C33.9 5.4 29.4 3.6 24 3.6 16.3 3.6 9.6 7.6 6.3 14.6l7.1 5.6c1.5-4.5 5.7-7.8 10.6-7.8z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #f8fafd;
+      --card: #ffffff;
+      --border: #e1e3e6;
+      --text: #202124;
+      --muted: #5f6368;
+      --blue: #1a73e8;
+      --blue-hover: #1557b0;
+      --blue-light: #e8f0fe;
+      --green: #1e8e3e;
+      --green-light: #e6f4ea;
+      --green-border: #ceead6;
+      --yellow: #fbbc04;
+      --red: #ea4335;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', 'Lexend', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    .container { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; width: 100%; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    
+    /* Header */
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { width: 34px; height: 34px; border-radius: 10px; background: var(--blue-light); border: 1px solid #d2e3fc; display: flex; align-items: center; justify-content: center; color: var(--blue); }
+    .brand-title { font-family: 'Lexend', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); }
+    .brand-title span { color: var(--blue); }
+    .badge { font-size: 11px; font-weight: 600; color: var(--blue); background: var(--blue-light); border: 1px solid #d2e3fc; padding: 3px 10px; border-radius: 9999px; }
+
+    /* Card */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 1px 3px rgba(60,64,67,0.06); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .card-title { font-family: 'Lexend', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .card-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* Status bar */
+    .status-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 14px 18px; }
+    .status-info { display: flex; align-items: center; gap: 10px; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #34a853; box-shadow: 0 0 0 3px rgba(52,168,83,0.2); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+    /* Only Core Field */
+    textarea { width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.6; outline: none; transition: 0.15s; font-family: inherit; resize: vertical; min-height: 96px; }
+    textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,115,232,0.15); background: #ffffff; }
+
+    .presets-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .preset-chip { background: #f1f3f4; border: 1px solid var(--border); padding: 5px 12px; border-radius: 9999px; font-size: 11.5px; font-weight: 600; cursor: pointer; color: var(--text); transition: 0.15s; }
+    .preset-chip:hover { background: var(--blue-light); color: var(--blue); border-color: #c2e7ff; }
+
+    .btn-save { background: var(--blue); color: #fff; border: none; padding: 9px 20px; border-radius: 9999px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-save:hover { background: var(--blue-hover); }
+
+    .btn-toggle { background: #f1f3f4; border: 1px solid var(--border); padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text); transition: 0.15s; }
+    .btn-toggle.active { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+
+    .btn-test { background: var(--blue-light); color: var(--blue); border: 1px solid #d2e3fc; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-test:hover { background: #d2e3fc; }
+
+    /* Activity Feed */
+    .activity-section { display: flex; flex-direction: column; gap: 12px; }
+    .activity-header { display: flex; justify-content: space-between; align-items: center; }
+    .activity-list { display: flex; flex-direction: column; gap: 10px; }
+    .activity-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .activity-top { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; font-weight: 700; }
+    .activity-incoming { font-size: 12px; color: var(--muted); background: var(--bg); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); }
+    .activity-reply { font-size: 12.5px; color: #1f1f1f; background: #eef4fe; padding: 10px 14px; border-radius: 12px; border: 1px solid #d2e3fc; line-height: 1.5; white-space: pre-wrap; }
+    .badge-replied { font-size: 10.5px; font-weight: 700; color: var(--green); background: var(--green-light); border: 1px solid var(--green-border); padding: 2px 8px; border-radius: 9999px; }
+
+    .empty-state { text-align: center; padding: 36px 16px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .empty-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--blue-light); display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 20px; }
+
+    .toast { position: fixed; bottom: 20px; right: 20px; background: #323232; color: #fff; padding: 10px 20px; border-radius: 9999px; font-size: 12.5px; font-weight: 600; display: none; z-index: 100; box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+    .toast.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        </div>
+        <div>
+          <div class="brand-title">Quick<span>Reply</span></div>
+        </div>
+        <span class="badge">Autonomous Agent</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button class="btn-test" onclick="simulateIncomingEmail()">
+          <span>▶ Test Bot</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-info">
+        <div class="status-dot" id="agent-status-dot"></div>
+        <div>
+          <div style="font-size: 12.5px; font-weight: 700; font-family: 'Lexend', sans-serif;">
+            Autonomous Email Bot: <span id="agent-status-label" style="color: var(--green);">Active 24/7</span>
+          </div>
+          <div style="font-size: 11px; color: var(--muted);">
+            Listening to <strong style="color: var(--text);" id="agent-email-label">u0707270088@id.gle</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-toggle active" id="btn-mode" onclick="toggleAutoSend()">
+          ⚡ Auto-Reply Direct
+        </button>
+        <button class="btn-toggle active" id="btn-power" onclick="toggleAgentPower()">
+          ● Bot On
+        </button>
+      </div>
+    </div>
+
+    <!-- THE ONLY CORE FIELD: BOT PERSONALITY & RESPONSE BEHAVIOUR -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fbbc04" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+            <span>Bot Personality & Response Behaviour</span>
+          </div>
+          <p class="card-desc">
+            The single field that controls how your bot makes decisions and replies to your emails.
+          </p>
+        </div>
+      </div>
+
+      <textarea id="agent-personality" rows="3" placeholder="Describe your bot's personality (e.g. Executive Assistant: direct, articulate, polite. Protect schedule, confirm milestones, never commit to meetings without an agenda.)">Executive Assistant: direct, articulate, polite. Protect schedule, confirm milestones, never commit to meetings without an agenda.</textarea>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div class="presets-row">
+          <span style="font-size: 11px; color: var(--muted); font-weight: 600;">Presets:</span>
+          <button class="preset-chip" onclick="applyPreset('👔 Executive Assistant: direct, articulate, polite. Protect schedule, confirm milestones, never commit to meetings without an agenda.')">👔 Executive Assistant</button>
+          <button class="preset-chip" onclick="applyPreset('⚡ Ultra-Concise: maximum 2 sentences. Direct to action, zero filler, immediate next steps.')">⚡ Ultra-Concise</button>
+          <button class="preset-chip" onclick="applyPreset('👑 The Don (Authoritative): firm, decisive, protective of scope and contract terms, highly respectful.')">👑 The Don</button>
+          <button class="preset-chip" onclick="applyPreset('🤝 Friendly Closer: warm, collaborative, highly encouraging, proposes 15-minute sync slots.')">🤝 Friendly Closer</button>
+          <button class="preset-chip" onclick="applyPreset('🛡️ Gatekeeper: politely declines unscheduled pitches, requests a written memo before any call.')">🛡️ Gatekeeper</button>
+        </div>
+
+        <button class="btn-save" id="btn-save" onclick="savePersonality()">
+          <span>Save Behaviour</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- AUTONOMOUS AGENT ACTIVITY (WHAT THE BOT HAS DONE) -->
+    <div class="activity-section">
+      <div class="activity-header">
+        <div style="font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+          <span>Autonomous Activity Feed</span>
+          <span style="font-size: 11px; font-weight: 600; color: var(--muted);" id="activity-count">(1 handled)</span>
+        </div>
+
+        <button class="btn-test" style="font-size: 11.5px; padding: 4px 12px;" onclick="simulateIncomingEmail()">
+          + Simulate Incoming Email
+        </button>
+      </div>
+
+      <div class="activity-list" id="activity-list">
+        <div class="activity-item">
+          <div class="activity-top">
+            <span>Alex Partner &lt;alex.partner@acme.com&gt;</span>
+            <span class="badge-replied">✓ Auto-Replied</span>
+          </div>
+          <div style="font-size: 12px; font-weight: 600; color: var(--text);">
+            Subject: Reschedule Q4 Review & Timeline
+          </div>
+          <div class="activity-incoming">
+            "Hi, can we reschedule our review from Thursday to Friday 11:00 AM? Please confirm if that slot works."
+          </div>
+          <div class="activity-reply">
+            <strong style="color: var(--blue); display: block; margin-bottom: 4px;">Bot Answered:</strong>
+Hi Alex,
+
+Thank you for reaching out. We have checked the calendar and can accommodate Friday at 11:00 AM for the Q4 review, provided an agenda is circulated in advance. Please forward the updated calendar invitation.
+
+Regards,
+Executive Assistant
+u0707270088@id.gle
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const personalityInput = document.getElementById('agent-personality');
+    const toast = document.getElementById('toast');
+    const btnSave = document.getElementById('btn-save');
+    const btnMode = document.getElementById('btn-mode');
+    const btnPower = document.getElementById('btn-power');
+    const statusDot = document.getElementById('agent-status-dot');
+    const statusLabel = document.getElementById('agent-status-label');
+    const activityList = document.getElementById('activity-list');
+    const activityCount = document.getElementById('activity-count');
+
+    let agentActive = true;
+    let autoSend = true;
+    let items = [
+      {
+        from: 'Alex Partner <alex.partner@acme.com>',
+        subject: 'Reschedule Q4 Review & Timeline',
+        body: 'Hi, can we reschedule our review from Thursday to Friday 11:00 AM? Please confirm if that slot works.',
+        reply: 'Hi Alex,\n\nThank you for reaching out. We have checked the calendar and can accommodate Friday at 11:00 AM for the Q4 review, provided an agenda is circulated in advance. Please forward the updated calendar invitation.\n\nRegards,\nExecutive Assistant\nu0707270088@id.gle'
+      }
+    ];
+
+    const savedPers = localStorage.getItem('bot_personality');
+    if (savedPers) personalityInput.value = savedPers;
+
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function applyPreset(text) {
+      personalityInput.value = text;
+      savePersonality();
+    }
+
+    async function savePersonality() {
+      const val = personalityInput.value.trim();
+      localStorage.setItem('bot_personality', val);
+      btnSave.innerText = 'Saved! ✓';
+      setTimeout(() => { btnSave.innerText = 'Save Behaviour'; }, 1800);
+      showToast('Bot personality saved & live! ⚡');
+
+      try {
+        await fetch('/api/email/toggle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            agentPersonality: val,
+            autoRespond: agentActive,
+            autoSend
+          })
+        });
+      } catch (e) {}
+    }
+
+    function toggleAutoSend() {
+      autoSend = !autoSend;
+      if (autoSend) {
+        btnMode.innerText = '⚡ Auto-Reply Direct';
+        btnMode.classList.add('active');
+        showToast('Mode: Direct Auto-Reply');
+      } else {
+        btnMode.innerText = '📋 Save as Drafts';
+        btnMode.classList.remove('active');
+        showToast('Mode: Save as Drafts');
+      }
+      savePersonality();
+    }
+
+    function toggleAgentPower() {
+      agentActive = !agentActive;
+      if (agentActive) {
+        btnPower.innerText = '● Bot On';
+        btnPower.classList.add('active');
+        statusDot.style.background = '#34a853';
+        statusLabel.innerText = 'Active 24/7';
+        statusLabel.style.color = 'var(--green)';
+        showToast('🟢 Autonomous Agent Active');
+      } else {
+        btnPower.innerText = '⏸ Bot Paused';
+        btnPower.classList.remove('active');
+        statusDot.style.background = '#9aa0a6';
+        statusLabel.innerText = 'Paused';
+        statusLabel.style.color = 'var(--muted)';
+        showToast('⏸ Agent Paused');
+      }
+      savePersonality();
+    }
+
+    async function simulateIncomingEmail() {
+      showToast('Simulating email to bot...');
+      const sampleSubjects = [
+        'Urgent: Budget approval for sprint 3',
+        'Partnership proposal & contract sync',
+        'Quick coffee chat tomorrow?',
+        'Vendor renewal deadline notice'
+      ];
+      const randomSub = sampleSubjects[Math.floor(Math.random() * sampleSubjects.length)];
+      
+      try {
+        const res = await fetch('/api/email/inbound-webhook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            from: 'client.inquiry@partner-corp.com',
+            subject: randomSub,
+            text: `Hello, we would like to confirm our next milestones regarding "${randomSub}". Please provide your immediate answer.`
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          renderNewEmail(
+            data.item.from,
+            data.item.subject,
+            data.item.body,
+            data.item.replyText
+          );
+          showToast('Bot responded autonomously! 🤖✨');
+          return;
+        }
+      } catch (err) {}
+
+      // Fallback display if server offline
+      const pers = personalityInput.value.toLowerCase();
+      let simulatedReply = '';
+      if (pers.includes('concise')) {
+        simulatedReply = 'Hello,\n\nReceived. We have reviewed your request and confirmed the schedule. Please send over the revised invite.\n\nBest regards,\nu0707270088@id.gle';
+      } else if (pers.includes('don') || pers.includes('authoritative')) {
+        simulatedReply = 'Greetings,\n\nWe acknowledge your message. We stand firm on our initial terms and project timeline. Let us know once aligned on this framework.\n\nRespectfully,\nu0707270088@id.gle';
+      } else {
+        simulatedReply = 'Hi,\n\nThank you for following up. We have reviewed your note and confirm we can proceed with these terms. Please send over the final confirmation so we can align our team.\n\nBest regards,\nu0707270088@id.gle';
+      }
+
+      renderNewEmail('client.inquiry@partner-corp.com', randomSub, `Hello, regarding "${randomSub}", can you confirm?`, simulatedReply);
+      showToast('Bot handled email! 🤖✨');
+    }
+
+    function renderNewEmail(from, subject, body, reply) {
+      items.unshift({ from, subject, body, reply });
+      activityCount.innerText = `(${items.length} handled)`;
+
+      const card = document.createElement('div');
+      card.className = 'activity-item';
+      card.innerHTML = `
+        <div class="activity-top">
+          <span>${from}</span>
+          <span class="badge-replied">✓ Auto-Replied</span>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--text);">
+          Subject: ${subject}
+        </div>
+        <div class="activity-incoming">
+          "${body}"
+        </div>
+        <div class="activity-reply">
+          <strong style="color: var(--blue); display: block; margin-bottom: 4px;">Bot Answered:</strong>
+${reply}
+        </div>
+      `;
+      activityList.prepend(card);
+    }
+  </script>
+</body>
+</html>

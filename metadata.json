@@ -1,0 +1,8 @@
+{
+  "name": "Godfather – Email Response & Auto-Responder Assistant",
+  "description": "Executive email response assistant powered by Gemini. Inbox monitoring, custom personas, tone control, auto-drafting, and instant reply generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

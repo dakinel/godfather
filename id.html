@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Executive Builder Illustration</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* Master Scene Wrapper */
+        .luxury-scene {
+            position: relative;
+            width: 380px;
+            height: 420px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- BUILDER ILLUSTRATION CONTAINER --- */
+        .builder-illustration {
+            position: relative;
+            width: 260px;
+            height: 360px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* Ambient Glow Backdrop */
+        .glow-backdrop {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 10px;
+            z-index: 0;
+        }
+
+        /* --- TORSO & HEAVY-DUTY ATTIRE --- */
+        .torso-group {
+            position: absolute;
+            bottom: 0;
+            width: 260px;
+            height: 190px;
+            z-index: 1;
+        }
+
+        .safety-vest {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            width: 230px;
+            height: 150px;
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            border-radius: 120px 120px 0 0;
+            box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(251, 191, 36, 0.5);
+        }
+
+        /* Reflective Vest Stripes */
+        .stripe-left {
+            position: absolute;
+            top: 20px;
+            left: 55px;
+            width: 25px;
+            height: 130px;
+            background: #f8fafc;
+            opacity: 0.9;
+            transform: skewX(-10deg);
+        }
+
+        .stripe-right {
+            position: absolute;
+            top: 20px;
+            right: 55px;
+            width: 25px;
+            height: 130px;
+            background: #f8fafc;
+            opacity: 0.9;
+            transform: skewX(10deg);
+        }
+
+        .work-shirt {
+            position: absolute;
+            bottom: 0;
+            left: 25px;
+            width: 210px;
+            height: 120px;
+            background: linear-gradient(to bottom, #334155, #1e293b);
+            border-radius: 90px 90px 0 0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+        }
+
+        .collar-opening {
+            position: absolute;
+            top: 0;
+            left: 75px;
+            width: 60px;
+            height: 50px;
+            background: #0f172a;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        /* --- HAMMER IN HAND --- */
+        .hammer-group {
+            position: absolute;
+            bottom: 40px;
+            right: -15px;
+            width: 50px;
+            height: 140px;
+            transform: rotate(-25deg);
+            z-index: 5;
+        }
+
+        .hammer-handle {
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 12px;
+            height: 110px;
+            background: linear-gradient(to right, #78350f, #92400e, #451a03);
+            border-radius: 6px;
+            box-shadow: 2px 4px 6px rgba(0,0,0,0.4);
+        }
+
+        .hammer-head {
+            position: absolute;
+            top: 0;
+            left: 2px;
+            width: 48px;
+            height: 22px;
+            background: linear-gradient(135deg, #cbd5e1, #475569);
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* --- NECK & HEAD --- */
+        .neck {
+            position: absolute;
+            bottom: 120px;
+            left: 115px;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to right, #d97706, #b45309, #92400e);
+            z-index: 2;
+            border-radius: 10px;
+        }
+
+        .head-group {
+            position: absolute;
+            bottom: 150px;
+            left: 75px;
+            width: 120px;
+            height: 150px;
+            z-index: 3;
+        }
+
+        .ear-left {
+            position: absolute;
+            top: 60px;
+            left: -5px;
+            width: 18px;
+            height: 28px;
+            background: #b45309;
+            border-radius: 50% 0 0 50%;
+        }
+
+        .ear-right {
+            position: absolute;
+            top: 60px;
+            right: -5px;
+            width: 18px;
+            height: 28px;
+            background: #92400e;
+            border-radius: 0 50% 50% 0;
+        }
+
+        .face {
+            position: absolute;
+            top: 25px;
+            left: 15px;
+            width: 90px;
+            height: 110px;
+            background: linear-gradient(145deg, #fcd34d, #f59e0b);
+            border-radius: 45px 45px 50px 50px;
+            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- HARD HAT --- */
+        .hard-hat {
+            position: absolute;
+            top: -15px;
+            left: 0px;
+            width: 120px;
+            height: 50px;
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            border-radius: 60px 60px 10px 10px;
+            z-index: 6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .hat-brim {
+            position: absolute;
+            top: 25px;
+            left: -10px;
+            width: 140px;
+            height: 12px;
+            background: #f59e0b;
+            border-radius: 6px;
+            z-index: 7;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .safety-glasses {
+            position: absolute;
+            top: 60px;
+            left: 18px;
+            width: 84px;
+            height: 24px;
+            background: rgba(56, 189, 248, 0.25);
+            border: 2px solid #0284c7;
+            border-radius: 12px;
+            z-index: 6;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.6);
+        }
+
+        .confident-smile {
+            position: absolute;
+            bottom: 22px;
+            left: 38px;
+            width: 20px;
+            height: 8px;
+            border-bottom: 2.5px solid #78350f;
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="luxury-scene">
+        <!-- Premium Builder Illustration holding hammer -->
+        <div class="builder-illustration">
+            <div class="glow-backdrop"></div>
+            
+            <div class="torso-group">
+                <div class="safety-vest">
+                    <div class="stripe-left"></div>
+                    <div class="stripe-right"></div>
+                </div>
+                <div class="work-shirt">
+                    <div class="collar-opening"></div>
+                </div>
+            </div>
+
+            <!-- Hammer Graphic -->
+            <div class="hammer-group">
+                <div class="hammer-handle"></div>
+                <div class="hammer-head"></div>
+            </div>
+
+            <div class="neck"></div>
+
+            <div class="head-group">
+                <div class="ear-left"></div>
+                <div class="ear-right"></div>
+                <div class="face">
+                    <div class="confident-smile"></div>
+                </div>
+                <div class="hard-hat"></div>
+                <div class="hat-brim"></div>
+                <div class="safety-glasses"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Doctor Illustration</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Canvas container for the illustration */
+        .doctor-illustration {
+            position: relative;
+            width: 300px;
+            height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-backdrop {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 20px;
+            z-index: 0;
+        }
+
+        /* --- SHOULDERS & TORSO (HALF-BODY) --- */
+        .torso-group {
+            position: absolute;
+            bottom: 0;
+            width: 260px;
+            height: 190px;
+            z-index: 1;
+        }
+
+        /* Outer Navy Scrubs / Under-shirt */
+        .shoulders {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            width: 230px;
+            height: 150px;
+            background: linear-gradient(135deg, #1e3a8a, #0f172a);
+            border-radius: 120px 120px 0 0;
+            box-shadow: inset 0 10px 15px rgba(255, 255, 255, 0.05);
+        }
+
+        /* White Lab Coat Body */
+        .lab-coat {
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 220px;
+            height: 140px;
+            background: linear-gradient(to bottom, #ffffff, #f1f5f9);
+            border-radius: 100px 100px 0 0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Coat Opening / V-Neck */
+        .coat-opening {
+            position: absolute;
+            top: 0;
+            left: 70px;
+            width: 80px;
+            height: 90px;
+            background: #1e293b;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        /* Coat Lapels (Left and Right) */
+        .lapel-left {
+            position: absolute;
+            top: 0;
+            left: 55px;
+            width: 45px;
+            height: 110px;
+            background: #ffffff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            transform: skewX(-15deg);
+            border-radius: 0 0 10px 0;
+        }
+
+        .lapel-right {
+            position: absolute;
+            top: 0;
+            right: 55px;
+            width: 45px;
+            height: 110px;
+            background: #e2e8f0;
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.05);
+            transform: skewX(15deg);
+            border-radius: 0 0 0 10px;
+        }
+
+        /* Professional Shirt Collar & Tie */
+        .inner-shirt {
+            position: absolute;
+            top: 0;
+            left: 95px;
+            width: 70px;
+            height: 50px;
+            background: #ffffff;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        .tie {
+            position: absolute;
+            top: 15px;
+            left: 122px;
+            width: 16px;
+            height: 80px;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 50% 85%, 0% 100%);
+        }
+
+        /* --- STETHOSCOPE --- */
+        .stethoscope-tubes {
+            position: absolute;
+            top: 45px;
+            left: 75px;
+            width: 110px;
+            height: 90px;
+            border: 4px solid #334155;
+            border-top: none;
+            border-radius: 0 0 60px 60px;
+            z-index: 2;
+        }
+
+        .stethoscope-chestpiece {
+            position: absolute;
+            bottom: 25px;
+            left: 122px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #cbd5e1, #64748b);
+            border: 3px solid #1e293b;
+            border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        /* --- NECK & HEAD --- */
+        .neck {
+            position: absolute;
+            bottom: 120px;
+            left: 115px;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to right, #f6ad55, #ed8936, #dd6b20);
+            z-index: 2;
+            border-radius: 10px;
+        }
+
+        .head-group {
+            position: absolute;
+            bottom: 150px;
+            left: 75px;
+            width: 120px;
+            height: 150px;
+            z-index: 3;
+        }
+
+        /* Ears */
+        .ear-left {
+            position: absolute;
+            top: 60px;
+            left: -5px;
+            width: 18px;
+            height: 28px;
+            background: #ed8936;
+            border-radius: 50% 0 0 50%;
+        }
+
+        .ear-right {
+            position: absolute;
+            top: 60px;
+            right: -5px;
+            width: 18px;
+            height: 28px;
+            background: #dd6b20;
+            border-radius: 0 50% 50% 0;
+        }
+
+        /* Face Base */
+        .face {
+            position: absolute;
+            top: 25px;
+            left: 15px;
+            width: 90px;
+            height: 110px;
+            background: linear-gradient(145deg, #fbd38d, #f6ad55);
+            border-radius: 45px 45px 50px 50px;
+            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Hair / Modern Hairstyle */
+        .hair-base {
+            position: absolute;
+            top: 15px;
+            left: 12px;
+            width: 96px;
+            height: 50px;
+            background: #1e293b;
+            border-radius: 50px 50px 20px 20px;
+            z-index: 4;
+        }
+
+        .hair-style {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            width: 80px;
+            height: 35px;
+            background: #0f172a;
+            border-radius: 40px 40px 10px 10px;
+            transform: rotate(-3deg);
+            z-index: 5;
+        }
+
+        /* Professional Glasses */
+        .glasses-frame {
+            position: absolute;
+            top: 62px;
+            left: 22px;
+            width: 76px;
+            height: 26px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 6;
+        }
+
+        .lens {
+            width: 32px;
+            height: 26px;
+            border: 2.5px solid #0ea5e9;
+            border-radius: 6px;
+            background: rgba(14, 165, 233, 0.08);
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .bridge {
+            position: absolute;
+            top: 8px;
+            left: 32px;
+            width: 12px;
+            height: 2px;
+            background: #0ea5e9;
+        }
+
+        /* Friendly Smile Accent */
+        .smile {
+            position: absolute;
+            bottom: 22px;
+            left: 38px;
+            width: 20px;
+            height: 8px;
+            border-bottom: 2.5px solid #9a3412;
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="doctor-illustration">
+        <div class="glow-backdrop"></div>
+        
+        <!-- Torso & Lab Coat (Half Body) -->
+        <div class="torso-group">
+            <div class="shoulders"></div>
+            <div class="lab-coat">
+                <div class="lapel-left"></div>
+                <div class="lapel-right"></div>
+                <div class="coat-opening"></div>
+                <div class="inner-shirt"></div>
+                <div class="tie"></div>
+            </div>
+            <div class="stethoscope-tubes"></div>
+            <div class="stethoscope-chestpiece"></div>
+        </div>
+
+        <!-- Neck -->
+        <div class="neck"></div>
+
+        <!-- Head, Hair, & Face -->
+        <div class="head-group">
+            <div class="ear-left"></div>
+            <div class="ear-right"></div>
+            <div class="face">
+                <div class="smile"></div>
+            </div>
+            <div class="hair-base"></div>
+            <div class="hair-style"></div>
+            
+            <!-- Glasses -->
+            <div class="glasses-frame">
+                <div class="lens"></div>
+                <div class="bridge"></div>
+                <div class="lens"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Classroom Teacher Illustration</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Scene Container */
+        .classroom-scene {
+            position: relative;
+            width: 540px;
+            height: 380px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+            padding: 0 20px;
+        }
+
+        /* --- GREEN CHALKBOARD --- */
+        .chalkboard {
+            position: absolute;
+            left: 10px;
+            bottom: 20px;
+            width: 260px;
+            height: 240px;
+            background-color: #234e32;
+            border: 8px solid #78350f; /* Wooden frame */
+            border-radius: 4px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .chalk-text {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.75);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 15px;
+        }
+
+        .chalkboard-tray {
+            position: absolute;
+            left: 2px;
+            bottom: -14px;
+            width: 276px;
+            height: 6px;
+            background-color: #92400e;
+            border-radius: 2px;
+        }
+
+        /* --- TEACHER ILLUSTRATION CONTAINER --- */
+        .teacher-illustration {
+            position: relative;
+            width: 260px;
+            height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 2;
+            margin-left: auto;
+        }
+
+        /* --- BACKGROUND GLOW --- */
+        .glow-backdrop {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 20px;
+            z-index: 0;
+        }
+
+        /* --- SHOULDERS & TORSO (HALF-BODY) --- */
+        .torso-group {
+            position: absolute;
+            bottom: 0;
+            width: 260px;
+            height: 190px;
+            z-index: 1;
+        }
+
+        .blazer {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            width: 230px;
+            height: 150px;
+            background: linear-gradient(135deg, #3b0764, #581c87);
+            border-radius: 120px 120px 0 0;
+            box-shadow: inset 0 10px 15px rgba(255, 255, 255, 0.05);
+        }
+
+        .blouse {
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 220px;
+            height: 130px;
+            background: linear-gradient(to bottom, #ffffff, #f3e8ff);
+            border-radius: 100px 100px 0 0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        }
+
+        .lapel-left {
+            position: absolute;
+            top: 0;
+            left: 45px;
+            width: 55px;
+            height: 120px;
+            background: #4c1d95;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            transform: skewX(-15deg);
+            border-radius: 0 0 10px 0;
+        }
+
+        .lapel-right {
+            position: absolute;
+            top: 0;
+            right: 45px;
+            width: 55px;
+            height: 120px;
+            background: #6b21a8;
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.1);
+            transform: skewX(15deg);
+            border-radius: 0 0 0 10px;
+        }
+
+        .blouse-opening {
+            position: absolute;
+            top: 0;
+            left: 85px;
+            width: 90px;
+            height: 70px;
+            background: #1e293b;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        .necklace {
+            position: absolute;
+            top: 42px;
+            left: 110px;
+            width: 40px;
+            height: 20px;
+            border: 3px solid #fbbf24;
+            border-top: none;
+            border-radius: 0 0 20px 20px;
+            z-index: 2;
+        }
+
+        /* --- NECK & HEAD --- */
+        .neck {
+            position: absolute;
+            bottom: 120px;
+            left: 115px;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to right, #f6ad55, #ed8936, #dd6b20);
+            z-index: 2;
+            border-radius: 10px;
+        }
+
+        .head-group {
+            position: absolute;
+            bottom: 150px;
+            left: 75px;
+            width: 120px;
+            height: 150px;
+            z-index: 3;
+        }
+
+        .hair-bun {
+            position: absolute;
+            top: 0px;
+            left: 45px;
+            width: 30px;
+            height: 30px;
+            background: #1e1b4b;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .ear-left {
+            position: absolute;
+            top: 60px;
+            left: -5px;
+            width: 18px;
+            height: 28px;
+            background: #ed8936;
+            border-radius: 50% 0 0 50%;
+        }
+
+        .ear-right {
+            position: absolute;
+            top: 60px;
+            right: -5px;
+            width: 18px;
+            height: 28px;
+            background: #dd6b20;
+            border-radius: 0 50% 50% 0;
+        }
+
+        .face {
+            position: absolute;
+            top: 25px;
+            left: 15px;
+            width: 90px;
+            height: 110px;
+            background: linear-gradient(145deg, #fbd38d, #f6ad55);
+            border-radius: 45px 45px 50px 50px;
+            box-shadow: inset 0 -10px 15px rgba(0,0,0,0.05);
+        }
+
+        .hair-base {
+            position: absolute;
+            top: 15px;
+            left: 10px;
+            width: 100px;
+            height: 60px;
+            background: #1e1b4b;
+            border-radius: 50px 50px 20px 20px;
+            z-index: 4;
+        }
+
+        .glasses-frame {
+            position: absolute;
+            top: 62px;
+            left: 22px;
+            width: 76px;
+            height: 26px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 6;
+        }
+
+        .lens {
+            width: 32px;
+            height: 26px;
+            border: 2.5px solid #fbbf24;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.08);
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .bridge {
+            position: absolute;
+            top: 8px;
+            left: 32px;
+            width: 12px;
+            height: 2px;
+            background: #fbbf24;
+        }
+
+        .smile {
+            position: absolute;
+            bottom: 22px;
+            left: 38px;
+            width: 20px;
+            height: 8px;
+            border-bottom: 2.5px solid #9a3412;
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="classroom-scene">
+        <!-- Chalkboard Backdrop -->
+        <div class="chalkboard">
+            <div class="chalk-text">
+                E = mc²<br>
+                a² + b² = c²<br>
+                H₂O + Energy ➔ O₂<br>
+                Welcome Class! 📚
+            </div>
+            <div class="chalkboard-tray"></div>
+        </div>
+
+        <!-- Teacher Illustration -->
+        <div class="teacher-illustration">
+            <div class="glow-backdrop"></div>
+            
+            <div class="torso-group">
+                <div class="blazer"></div>
+                <div class="blouse">
+                    <div class="lapel-left"></div>
+                    <div class="lapel-right"></div>
+                    <div class="blouse-opening"></div>
+                    <div class="necklace"></div>
+                </div>
+            </div>
+
+            <div class="neck"></div>
+
+            <div class="head-group">
+                <div class="hair-bun"></div>
+                <div class="ear-left"></div>
+                <div class="ear-right"></div>
+                <div class="face">
+                    <div class="smile"></div>
+                </div>
+                <div class="hair-base"></div>
+                
+                <div class="glasses-frame">
+                    <div class="lens"></div>
+                    <div class="bridge"></div>
+                    <div class="lens"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
